@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ir_project
+{
+    public class Document
+    {
+        private String value;
+
+        public Document(String value)
+        {
+            this.value = value;
+        }
+
+        /// <summary>
+        /// Enumerate over all of the terms in a document.
+        /// </summary>
+        public IEnumerable<string> getTerms()
+        {
+            int cIndex = 0;
+            int nIndex;
+            while ((nIndex = value.IndexOf(' ', cIndex + 1)) != -1)
+            {
+                int sIndex = (cIndex == 0 ? 0 : cIndex + 1);
+                yield return value.Substring(sIndex, nIndex - sIndex);
+                cIndex = nIndex;
+            }
+            yield return value.Substring(cIndex == 0 ? 0 : cIndex + 1);
+        }
+    }
+}
