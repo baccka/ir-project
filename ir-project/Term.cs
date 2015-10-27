@@ -9,12 +9,12 @@ namespace ir_project
     /// <summary>
     /// This class represents a term and contains all occurences of that term in the document collection. 
     /// </summary>
-    class Term
+    public class Term
     {
         public struct DocumentOccurence
         {
-            int frequency;
-            int documentId;
+            public int frequency;
+            public int documentId;
 
             public DocumentOccurence(int frequency, int documentId)
             {

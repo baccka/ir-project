@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ir_project
 {
-    class TermDocumentMatrix
+    public class TermDocumentMatrix
     {
         private Dictionary<String, Term> terms = new Dictionary<String, Term>();
 
