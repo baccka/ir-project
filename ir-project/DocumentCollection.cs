@@ -14,7 +14,7 @@ namespace ir_project
 
         /// <summary>
         /// Return the average length of a document in this document collection.
-        /// </summary>
+        /// </summary of blalah>
         public float averageDocumentLength
         {
             get
