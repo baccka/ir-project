@@ -50,7 +50,31 @@ namespace ir_project_unittests
                 Assert.AreEqual(".af", terms[7]);
             }
         }
-    
+        
+        // This method ensures that the documents and the document collection compute
+        // correct document and average document lengths.
+        [TestMethod]
+        public void TestDocumentLengthComputation()
+        {
+            {
+                var d0 = new Document("hello world");
+                var d1 = new Document("hello world hello man");
+                var d2 = new Document("a b");
+                var d3 = new Document("c d");
+                Assert.AreEqual(2, d0.length);
+                Assert.AreEqual(4, d1.length);
+                Assert.AreEqual(2, d2.length);
+                Assert.AreEqual(2, d3.length);
+                var documents = new DocumentCollection();
+                documents.add(d0);
+                documents.add(d1);
+                Assert.AreEqual(3.0, documents.averageDocumentLength);
+                documents.add(d2);
+                documents.add(d3);
+                Assert.AreEqual(2.5, documents.averageDocumentLength);
+            }
+        }
+
         [TestMethod]
         public void TestSearchIndexConstruction()
         {

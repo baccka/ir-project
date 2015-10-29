@@ -9,10 +9,17 @@ namespace ir_project
     public class Document
     {
         private String value;
+        public int length { get; private set; }
 
         public Document(String value)
         {
             this.value = value;
+            length = 0;
+
+            foreach (var term in getTerms())
+            {
+                length += 1;
+            }
         }
 
         /// <summary>

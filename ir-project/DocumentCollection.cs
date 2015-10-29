@@ -9,12 +9,35 @@ namespace ir_project
     public class DocumentCollection
     {
         private List<Document> documents = new List<Document>();
+        private bool isAverageDocumentLengthComputed = false;
+        private float averageLength = 0;
+
+        /// <summary>
+        /// Return the average length of a document in this document collection.
+        /// </summary>
+        public float averageDocumentLength
+        {
+            get
+            {
+                if (!isAverageDocumentLengthComputed)
+                {
+                    averageLength = 0;
+                    foreach (var doc in documents)
+                    {
+                        averageLength += doc.length;
+                    }
+                    averageLength /= documents.Count;
+                }
+                return averageLength;
+            }
+        }
 
         /// <summary>
         /// Add a document to the document collection.
         /// </summary>
         public void add(Document doc)
         {
+            isAverageDocumentLengthComputed = false;
             documents.Add(doc);
         }
 
