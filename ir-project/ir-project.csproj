@@ -46,6 +46,7 @@
     <Compile Include="InformationRetriever.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query.cs" />
     <Compile Include="Term.cs" />
     <Compile Include="TermDocumentMatrix.cs" />
   </ItemGroup>

@@ -108,6 +108,11 @@ namespace ir_project_unittests
                 Assert.AreEqual(1, man .getGlobalFrequency());
                 Assert.AreEqual(1, man.getOccurences()[0].frequency);
                 Assert.AreEqual(1, man.getOccurences()[0].documentId);
+
+                var query = ir.createQuery(new Document("world hello hello"));
+                Assert.AreEqual(2, query.terms.Count);
+                Assert.AreEqual(1, query.terms[0].frequency);
+                Assert.AreEqual(2, query.terms[1].frequency);
             }
         }
     }

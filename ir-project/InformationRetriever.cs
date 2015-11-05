@@ -24,9 +24,12 @@ namespace ir_project
                 foreach (var word in doc.getTerms())
                 {
                     int frequency;
-                    if (documentTerms.TryGetValue(word, out frequency)) {
+                    if (documentTerms.TryGetValue(word, out frequency))
+                    {
                         documentTerms[word] = frequency + 1;
-                    } else {
+                    }
+                    else
+                    {
                         documentTerms[word] = 1;
                     }
                 }
@@ -37,6 +40,34 @@ namespace ir_project
                 }
                 documentId++;
             }
+        }
+
+        /// <summary>
+        /// Create a query that can be used for document retrival from the given document.
+        /// </summary>
+        public Query createQuery(Document query) {
+            // Extract the terms that are present in a query.
+            Dictionary<Term, int> queryTerms = new Dictionary<Term, int>();
+            foreach (var word in query.getTerms())
+            {
+                int frequency;
+                var term = terms.getTerm(word);
+                if (queryTerms.TryGetValue(term, out frequency))
+                {
+                    queryTerms[term] = frequency + 1;
+                }
+                else
+                {
+                    queryTerms[term] = 1;
+                }
+            }
+            // Convert the dictionary into a list of terms.
+            List<Query.QueryTerm> termList = new List<Query.QueryTerm>();
+            foreach (var i in queryTerms)
+            {
+                termList.Add(new Query.QueryTerm(i.Key, i.Value));
+            }
+            return new Query(termList);
         }
     }
 }
