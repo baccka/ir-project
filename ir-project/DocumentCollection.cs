@@ -52,7 +52,7 @@ namespace ir_project
             }
         }
 
-        public IEnumerable<Document> getDocuments()
+        public IList<Document> getDocuments()
         {
             return documents;
         }

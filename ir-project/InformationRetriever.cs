@@ -9,6 +9,19 @@ namespace ir_project
     public class InformationRetriever
     {
         public TermDocumentMatrix terms = new TermDocumentMatrix();
+        public DocumentCollection documents = null;
+
+        public struct SearchResultItem
+        {
+            public int documentId;
+            public float similarity;
+
+            public SearchResultItem(int documentId, float similarity)
+            {
+                this.documentId = documentId;
+                this.similarity = similarity;
+            }
+        };
 
         /// <summary>
         /// Update the IR system by building a search index using the
@@ -16,6 +29,7 @@ namespace ir_project
         /// </summary>
         public void update(DocumentCollection documents)
         {
+            this.documents = documents;
             var documentId = 0;
             foreach (var doc in documents.getDocuments())
             {
@@ -68,6 +82,41 @@ namespace ir_project
                 termList.Add(new Query.QueryTerm(i.Key, i.Value));
             }
             return new Query(termList);
+        }
+
+        /// <summary>
+        /// Perform a search using the given query.
+        /// </summary>
+        public List<SearchResultItem> executeQuery(Query query, BM25Scheme scheme)
+        {
+            // Find the documents that contain terms that exists in the query.
+            var results = new Dictionary<int,float>();
+            foreach (var term in query.terms)
+            {
+                float idf = scheme.computeIDF((float)documents.getDocuments().Count, (float)term.term.getOccurences().Count);
+                foreach (var occurence in term.term.getOccurences())
+                {
+                    float dl = (float)documents[occurence.documentId].length;
+                    float termSimilarity = scheme.computeTermSimilarity((float)occurence.frequency, idf, (float)term.frequency, dl, documents.averageDocumentLength);
+                    float similarity;
+                    if (results.TryGetValue(occurence.documentId, out similarity))
+                    {
+                        results[occurence.documentId] = similarity + termSimilarity;
+                    }
+                    else
+                    {
+                        results[occurence.documentId] = termSimilarity;
+                    }
+                }
+            }
+            // Create an ordered list of resulting documents and their similarity scores.
+            var resultList = new List<SearchResultItem>();
+            foreach (var i in results)
+            {
+                resultList.Add(new SearchResultItem(i.Key, i.Value));
+            }
+            resultList.Sort((x, y) => -x.similarity.CompareTo(y.similarity));
+            return resultList;
         }
     }
 }

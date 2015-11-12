@@ -115,5 +115,32 @@ namespace ir_project_unittests
                 Assert.AreEqual(2, query.terms[1].frequency);
             }
         }
+    
+        [TestMethod]
+        public void TestBM25Searching()
+        {
+            var d0 = new Document("hello world");
+            var d1 = new Document("hello world hello man");
+            var documents = new DocumentCollection();
+            documents.add(d0);
+            documents.add(d1);
+            var ir = new InformationRetriever();
+            ir.update(documents);
+            var scheme = new BM25Scheme(/*k1=*/2.0f, /*b=*/0.75f);
+
+            {
+                var results = ir.executeQuery(ir.createQuery(new Document("hello")), scheme);
+                Assert.AreEqual(2, results.Count);
+                Assert.AreEqual(1, results[0].documentId);
+                Assert.AreEqual(0, results[1].documentId);
+                Assert.IsTrue(results[0].similarity > results[1].similarity);
+            }
+
+            {
+                var results = ir.executeQuery(ir.createQuery(new Document("man")), scheme);
+                Assert.AreEqual(1, results.Count);
+                Assert.AreEqual(1, results[0].documentId);
+            }
+        }
     }
 }
