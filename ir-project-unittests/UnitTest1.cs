@@ -178,7 +178,7 @@ or partial pressures.  a method of interest is polarography.
  the crossing of fatty acids through the placental barrier.  normal
 fatty acid levels in placenta and fetus.
 ";
-            var docs = DocumentImporter.parseDocuments(contents);
+            var docs = DataImporter.parseDocuments(contents);
             Assert.AreEqual(5, docs.Count);
             Assert.AreEqual(" the crystalline lens in vertebrates, including humans.", docs[0].value);
             Assert.AreEqual(1, docs[0].id);
@@ -190,6 +190,28 @@ fatty acid levels in placenta and fetus.
             Assert.AreEqual(4, docs[3].id);
             Assert.AreEqual(" the crossing of fatty acids through the placental barrier.  normal\nfatty acid levels in placenta and fetus.", docs[4].value);
             Assert.AreEqual(50, docs[4].id);
+
+
+            // Test .REL file import.
+            var rels = @"
+1 0 13 1
+1 0 14 1
+2 0 301 1 
+2 0 303 1
+5 0 59 1
+";
+            var judgements = DataImporter.parseRelevance(rels);
+            Assert.AreEqual(5, judgements.Count);
+            Assert.AreEqual(1, judgements[0].queryId);
+            Assert.AreEqual(13, judgements[0].documentId);
+            Assert.AreEqual(1, judgements[1].queryId);
+            Assert.AreEqual(14, judgements[1].documentId);
+            Assert.AreEqual(2, judgements[2].queryId);
+            Assert.AreEqual(301, judgements[2].documentId);
+            Assert.AreEqual(2, judgements[3].queryId);
+            Assert.AreEqual(303, judgements[3].documentId);
+            Assert.AreEqual(5, judgements[4].queryId);
+            Assert.AreEqual(59, judgements[4].documentId);
         }
     }
 }

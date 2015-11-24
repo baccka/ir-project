@@ -11,7 +11,7 @@ namespace ir_project
     /// <summary>
     /// Reads files that contain the documents or the queries.
     /// </summary>
-    public class DocumentImporter
+    public class DataImporter
     {
         private static String matchValue(Regex regex, String value)
         {
@@ -73,6 +73,37 @@ namespace ir_project
                 documents.Add(new Document(currentDocument, documentId));
             }
             return documents;
+        }
+
+        /// <summary>
+        /// Load the relevance judgements contained in the .REL file.
+        /// The .REL file should be of the following format:
+        ///   <query-id> ??? <document-id> ???
+        /// E.g.:
+        ///   2 0 294 1
+        ///   2 0 296 1
+        ///   2 0 300 1
+        /// </summary>
+        /// <param name="input">contents of the file</param>
+        public static List<RelevanceJudgement> parseRelevance(String input)
+        {
+            List<RelevanceJudgement> results = new List<RelevanceJudgement>();
+            var relevanceRegex = new Regex(@"^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*$");
+            using (StringReader reader = new StringReader(input))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Match match = relevanceRegex.Match(line);
+                    if (!match.Success)
+                        continue;
+                    // In the .REL format, the first 
+                    var queryId = int.Parse(match.Groups[1].Value);
+                    var documentId = int.Parse(match.Groups[3].Value);
+                    results.Add(new RelevanceJudgement(queryId, documentId));
+                }
+            }
+            return results;
         }
     }
 }
