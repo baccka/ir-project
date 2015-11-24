@@ -59,7 +59,16 @@ namespace ir_project_unittests
                 Assert.AreEqual("xx", terms[4]);
                 Assert.AreEqual("yy", terms[5]);
                 Assert.AreEqual("13", terms[6]);
-                Assert.AreEqual(".af", terms[7]);
+                Assert.AreEqual("af", terms[7]);
+            }
+            {
+                var document = new Document("Sentence, yes.\nHello world!", 0);
+                var terms = getDocumentTerms(document);
+                Assert.AreEqual(4, terms.Count);
+                Assert.AreEqual("Sentence", terms[0]);
+                Assert.AreEqual("yes", terms[1]);
+                Assert.AreEqual("Hello", terms[2]);
+                Assert.AreEqual("world", terms[3]);
             }
         }
         

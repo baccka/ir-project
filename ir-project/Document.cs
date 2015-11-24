@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace ir_project
 {
@@ -24,6 +25,18 @@ namespace ir_project
             }
         }
 
+        public static bool IsCharAlpha(string text, int pos)
+        {
+            UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(text, pos);
+            return uc == UnicodeCategory.UppercaseLetter ||
+                    uc == UnicodeCategory.LowercaseLetter ||
+                    uc == UnicodeCategory.TitlecaseLetter ||
+                    uc == UnicodeCategory.DecimalDigitNumber ||
+                    uc == UnicodeCategory.LetterNumber ||
+                    uc == UnicodeCategory.MathSymbol ||
+                    uc == UnicodeCategory.OtherLetter;
+        }
+
         /// <summary>
         /// Enumerate over all of the terms in a document.
         /// </summary>
@@ -32,15 +45,21 @@ namespace ir_project
             if (value.Length == 0) {
                 yield break;
             }
-            int cIndex = 0;
-            int nIndex;
-            while ((nIndex = value.IndexOf(' ', cIndex + 1)) != -1)
-            {
-                int sIndex = (cIndex == 0 ? 0 : cIndex + 1);
-                yield return value.Substring(sIndex, nIndex - sIndex);
-                cIndex = nIndex;
+            int[] TextElements = StringInfo.ParseCombiningCharacters(value);
+        
+            int n = TextElements.Length;
+            int i = 0;
+            
+            while (i < n) {
+                // Skip non words, such as spaces and punctuation.
+                while (i < n && !IsCharAlpha(value, TextElements[i])) i++;
+                // Get the word
+                int start = i;
+                while (i < n && IsCharAlpha(value, TextElements[i])) i++;
+                if (i > start)
+                    yield return value.Substring(start, i - start);
             }
-            yield return value.Substring(cIndex == 0 ? 0 : cIndex + 1);
+            yield break;
         }
     }
 }
