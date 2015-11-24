@@ -42,13 +42,13 @@ namespace ir_project
                     if (idString != null)
                     {
                         // Line in the form of '.I NNN'
-                        documentId = int.Parse(idString);
-                        isPreviousLineDotI = true;
                         if (currentDocument != null)
                         {
-                            documents.Add(new Document(currentDocument));
+                            documents.Add(new Document(currentDocument, documentId));
                         }
+                        documentId = int.Parse(idString);
                         currentDocument = "";
+                        isPreviousLineDotI = true;
                         continue;
                     }
                     if (isPreviousLineDotI && dotWRegex.IsMatch(line))
@@ -70,7 +70,7 @@ namespace ir_project
             // Add the final document
             if (currentDocument != null)
             {
-                documents.Add(new Document(currentDocument));
+                documents.Add(new Document(currentDocument, documentId));
             }
             return documents;
         }

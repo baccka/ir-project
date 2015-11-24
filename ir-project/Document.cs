@@ -10,10 +10,12 @@ namespace ir_project
     {
         public String value { get; private set; }
         public int length { get; private set; }
+        public int id { get; private set; }
 
-        public Document(String value)
+        public Document(String value, int id)
         {
             this.value = value;
+            this.id = id;
             length = 0;
 
             foreach (var term in getTerms())

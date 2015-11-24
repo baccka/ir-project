@@ -24,31 +24,32 @@ namespace ir_project_unittests
         public void TestDocumentTermEnumeration()
         {
             {
-                var document = new Document("");
+                var document = new Document("", 0);
                 var terms = getDocumentTerms(document);
                 Assert.AreEqual(0, terms.Count);
+                Assert.AreEqual(0, document.id);
             }
             {
-                var document = new Document("a");
+                var document = new Document("a", 0);
                 var terms = getDocumentTerms(document);
                 Assert.AreEqual(1, terms.Count);
                 Assert.AreEqual("a", terms[0]);
             }
             {
-                var document = new Document("document");
+                var document = new Document("document", 0);
                 var terms = getDocumentTerms(document);
                 Assert.AreEqual(1, terms.Count);
                 Assert.AreEqual("document", terms[0]);
             }
             {
-                var document = new Document("hello world");
+                var document = new Document("hello world", 0);
                 var terms = getDocumentTerms(document);
                 Assert.AreEqual(2, terms.Count);
                 Assert.AreEqual("hello", terms[0]);
                 Assert.AreEqual("world", terms[1]);
             }
             {
-                var document = new Document("a b c d xx yy 13 .af");
+                var document = new Document("a b c d xx yy 13 .af", 0);
                 var terms = getDocumentTerms(document);
                 Assert.AreEqual(8, terms.Count);
                 Assert.AreEqual("a", terms[0]);
@@ -68,10 +69,10 @@ namespace ir_project_unittests
         public void TestDocumentLengthComputation()
         {
             {
-                var d0 = new Document("hello world");
-                var d1 = new Document("hello world hello man");
-                var d2 = new Document("a b");
-                var d3 = new Document("c d");
+                var d0 = new Document("hello world", 0);
+                var d1 = new Document("hello world hello man", 1);
+                var d2 = new Document("a b", 2);
+                var d3 = new Document("c d", 3);
                 Assert.AreEqual(2, d0.length);
                 Assert.AreEqual(4, d1.length);
                 Assert.AreEqual(2, d2.length);
@@ -90,8 +91,8 @@ namespace ir_project_unittests
         public void TestSearchIndexConstruction()
         {
             {
-                var d0 = new Document("hello world");
-                var d1 = new Document("hello world hello man");
+                var d0 = new Document("hello world", 0);
+                var d1 = new Document("hello world hello man", 1);
                 var documents = new DocumentCollection();
                 documents.add(d0);
                 documents.add(d1);
@@ -120,7 +121,7 @@ namespace ir_project_unittests
                 Assert.AreEqual(1, man.getOccurences()[0].frequency);
                 Assert.AreEqual(1, man.getOccurences()[0].documentId);
 
-                var query = ir.createQuery(new Document("world hello hello"));
+                var query = ir.createQuery(new Document("world hello hello", 0));
                 Assert.AreEqual(2, query.terms.Count);
                 Assert.AreEqual(1, query.terms[0].frequency);
                 Assert.AreEqual(2, query.terms[1].frequency);
@@ -130,8 +131,8 @@ namespace ir_project_unittests
         [TestMethod]
         public void TestBM25Searching()
         {
-            var d0 = new Document("hello world");
-            var d1 = new Document("hello world hello man");
+            var d0 = new Document("hello world", 0);
+            var d1 = new Document("hello world hello man", 1);
             var documents = new DocumentCollection();
             documents.add(d0);
             documents.add(d1);
@@ -140,7 +141,7 @@ namespace ir_project_unittests
             var scheme = new BM25Scheme(/*k1=*/2.0f, /*b=*/0.75f);
 
             {
-                var results = ir.executeQuery(ir.createQuery(new Document("hello")), scheme);
+                var results = ir.executeQuery(ir.createQuery(new Document("hello", 0)), scheme);
                 Assert.AreEqual(2, results.Count);
                 Assert.AreEqual(1, results[0].documentId);
                 Assert.AreEqual(0, results[1].documentId);
@@ -148,7 +149,7 @@ namespace ir_project_unittests
             }
 
             {
-                var results = ir.executeQuery(ir.createQuery(new Document("man")), scheme);
+                var results = ir.executeQuery(ir.createQuery(new Document("man", 0)), scheme);
                 Assert.AreEqual(1, results.Count);
                 Assert.AreEqual(1, results[0].documentId);
             }
@@ -180,10 +181,15 @@ fatty acid levels in placenta and fetus.
             var docs = DocumentImporter.parseDocuments(contents);
             Assert.AreEqual(5, docs.Count);
             Assert.AreEqual(" the crystalline lens in vertebrates, including humans.", docs[0].value);
+            Assert.AreEqual(1, docs[0].id);
             Assert.AreEqual(" the relationship of blood and cerebrospinal fluid oxygen concentrations\nor partial pressures.  a method of interest is polarography.", docs[1].value);
+            Assert.AreEqual(2, docs[1].id);
             Assert.AreEqual(" electron microscopy of lung or bronchi.", docs[2].value);
+            Assert.AreEqual(3, docs[2].id);
             Assert.AreEqual(" tissue culture of lung or bronchial neoplasms.", docs[3].value);
+            Assert.AreEqual(4, docs[3].id);
             Assert.AreEqual(" the crossing of fatty acids through the placental barrier.  normal\nfatty acid levels in placenta and fetus.", docs[4].value);
+            Assert.AreEqual(50, docs[4].id);
         }
     }
 }
