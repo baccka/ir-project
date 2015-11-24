@@ -8,7 +8,7 @@ namespace ir_project
 {
     public class Document
     {
-        private String value;
+        public String value { get; private set; }
         public int length { get; private set; }
 
         public Document(String value)

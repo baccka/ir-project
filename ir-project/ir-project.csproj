@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BM25Scheme.cs" />
+    <Compile Include="DataImporter.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="DocumentCollection.cs" />
     <Compile Include="InformationRetriever.cs" />

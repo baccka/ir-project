@@ -142,5 +142,37 @@ namespace ir_project_unittests
                 Assert.AreEqual(1, results[0].documentId);
             }
         }
+
+        [TestMethod]
+        public void TestDataImporter()
+        {
+            // Test .ALL and .QRY file import.
+            var contents = @"
+.I 1
+.W
+ the crystalline lens in vertebrates, including humans.
+.I 2
+.W
+ the relationship of blood and cerebrospinal fluid oxygen concentrations
+or partial pressures.  a method of interest is polarography.
+.I 3
+.W
+ electron microscopy of lung or bronchi.
+.I 4
+.W
+ tissue culture of lung or bronchial neoplasms.
+.I  50
+.W
+ the crossing of fatty acids through the placental barrier.  normal
+fatty acid levels in placenta and fetus.
+";
+            var docs = DocumentImporter.parseDocuments(contents);
+            Assert.AreEqual(5, docs.Count);
+            Assert.AreEqual(" the crystalline lens in vertebrates, including humans.", docs[0].value);
+            Assert.AreEqual(" the relationship of blood and cerebrospinal fluid oxygen concentrations\nor partial pressures.  a method of interest is polarography.", docs[1].value);
+            Assert.AreEqual(" electron microscopy of lung or bronchi.", docs[2].value);
+            Assert.AreEqual(" tissue culture of lung or bronchial neoplasms.", docs[3].value);
+            Assert.AreEqual(" the crossing of fatty acids through the placental barrier.  normal\nfatty acid levels in placenta and fetus.", docs[4].value);
+        }
     }
 }
