@@ -24,6 +24,17 @@ namespace ir_project_unittests
         public void TestDocumentTermEnumeration()
         {
             {
+                var document = new Document("");
+                var terms = getDocumentTerms(document);
+                Assert.AreEqual(0, terms.Count);
+            }
+            {
+                var document = new Document("a");
+                var terms = getDocumentTerms(document);
+                Assert.AreEqual(1, terms.Count);
+                Assert.AreEqual("a", terms[0]);
+            }
+            {
                 var document = new Document("document");
                 var terms = getDocumentTerms(document);
                 Assert.AreEqual(1, terms.Count);

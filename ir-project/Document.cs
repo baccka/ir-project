@@ -27,6 +27,9 @@ namespace ir_project
         /// </summary>
         public IEnumerable<string> getTerms()
         {
+            if (value.Length == 0) {
+                yield break;
+            }
             int cIndex = 0;
             int nIndex;
             while ((nIndex = value.IndexOf(' ', cIndex + 1)) != -1)
