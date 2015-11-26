@@ -10,6 +10,7 @@ namespace ir_project
     {
         public TermDocumentMatrix terms = new TermDocumentMatrix();
         public DocumentCollection documents = null;
+        public Stemmer stemmer = new Stemmer();
 
         public struct SearchResultItem
         {
@@ -35,8 +36,9 @@ namespace ir_project
             {
                 // Create a local (document specific) term collection.
                 Dictionary<String, int> documentTerms = new Dictionary<String, int>();
-                foreach (var word in doc.getTerms())
+                foreach (var rawWord in doc.getTerms())
                 {
+                    var word = stemmer.stem(rawWord);
                     int frequency;
                     if (documentTerms.TryGetValue(word, out frequency))
                     {
@@ -62,8 +64,9 @@ namespace ir_project
         public Query createQuery(Document query) {
             // Extract the terms that are present in a query.
             Dictionary<Term, int> queryTerms = new Dictionary<Term, int>();
-            foreach (var word in query.getTerms())
+            foreach (var rawWord in query.getTerms())
             {
+                String word = stemmer.stem(rawWord);
                 int frequency;
                 var term = terms.getTerm(word);
                 if (queryTerms.TryGetValue(term, out frequency))

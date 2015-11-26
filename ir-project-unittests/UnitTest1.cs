@@ -222,5 +222,14 @@ fatty acid levels in placenta and fetus.
             Assert.AreEqual(5, judgements[4].queryId);
             Assert.AreEqual(59, judgements[4].documentId);
         }
+
+        [TestMethod]
+        public void TestStemmer()
+        {
+            var stemmer = new Stemmer();
+            Assert.AreEqual("hello", stemmer.stem("Hello"));
+            Assert.AreEqual("brake", stemmer.stem("braking"));
+            Assert.AreEqual("park", stemmer.stem("parking"));
+        }
     }
 }
