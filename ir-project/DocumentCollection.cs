@@ -12,6 +12,13 @@ namespace ir_project
         private bool isAverageDocumentLengthComputed = false;
         private float averageLength = 0;
 
+        public DocumentCollection() { }
+        public DocumentCollection(List<Document> documents)
+        {
+            this.documents = documents;
+        }
+
+
         /// <summary>
         /// Return the average length of a document in this document collection.
         /// </summary of blalah>
