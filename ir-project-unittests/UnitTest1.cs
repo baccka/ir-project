@@ -96,6 +96,25 @@ namespace ir_project_unittests
             }
         }
 
+        // This method ensures that the document collection can return documents
+        // based on their id.
+        [TestMethod]
+        public void TestDocumentIDMapping()
+        {
+            var d0 = new Document("hello world", 11);
+            var d1 = new Document("hello world hello man", 42);
+            var documents = new DocumentCollection();
+            documents.add(d0);
+            documents.add(d1);
+
+            Assert.AreSame(d0, documents.documentById(11));
+            Assert.AreSame(d1, documents.documentById(42));
+            var d2 = new Document("foo", 0);
+            documents.add(d2);
+            Assert.AreSame(d2, documents.documentById(0));
+        }
+
+
         [TestMethod]
         public void TestSearchIndexConstruction()
         {

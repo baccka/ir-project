@@ -11,6 +11,8 @@ namespace ir_project
         private List<Document> documents = new List<Document>();
         private bool isAverageDocumentLengthComputed = false;
         private float averageLength = 0;
+        private Dictionary<int, Document> idDocumentMapping = new Dictionary<int, Document>();
+        private bool isIdDocumentMappingDone = false;
 
         public DocumentCollection() { }
         public DocumentCollection(List<Document> documents)
@@ -45,7 +47,21 @@ namespace ir_project
         public void add(Document doc)
         {
             isAverageDocumentLengthComputed = false;
+            isIdDocumentMappingDone = false;
             documents.Add(doc);
+        }
+
+        public Document documentById(int id)
+        {
+            if (!isIdDocumentMappingDone)
+            {
+                foreach (var d in documents)
+                {
+                    idDocumentMapping[d.id] = d;
+                }
+                isIdDocumentMappingDone = true;
+            }
+            return idDocumentMapping[id];
         }
 
         /// <summary>

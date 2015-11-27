@@ -58,6 +58,16 @@ namespace ir_project_terminal
             }
         }
 
+        static void executeQuery(InformationRetriever engine, BM25Scheme scheme, Query query)
+        {
+            var results = engine.executeQuery(query, scheme);
+            Console.WriteLine("Found {0} results:", results.Count);
+            foreach (var result in results)
+            {
+                Console.WriteLine("  document id: {0}, similarity score: {1}", result.documentId, result.similarity);
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to ir-project command line terminal interface.");
@@ -67,9 +77,12 @@ namespace ir_project_terminal
             String input;
 
             var loadDocuments = new Command("load documents");
+            var loadQueries = new Command("load queries");
             var runNewQuery = new Command("run text query");
-            Command[] commands = { loadDocuments, runNewQuery };
+            var runQuery = new Command("run query");
+            Command[] commands = { loadDocuments, loadQueries, runNewQuery, runQuery };
 
+            var queryCollection = new DocumentCollection();
             var engine = new InformationRetriever();
             // Weighting schemes.
             var scheme = new BM25Scheme(/*k1=*/2.0f, /*b=*/0.75f);
@@ -90,27 +103,49 @@ namespace ir_project_terminal
 
                 switch (matchedCommand) {
                     case "load documents":
-                        var data = readFile(matchedArgument);
-                        if (data != null) 
                         {
-                            Console.WriteLine("Loading documents... ");
-                            var documents = DataImporter.parseDocuments(data);
-                            Console.WriteLine("Loaded {0} documents!", documents.Count);
-                            Console.Write("Constructing the term-document indexing datastructures... ");
-                            engine.update(new DocumentCollection(documents));
-                            Console.WriteLine("Done!");
+                            var data = readFile(matchedArgument);
+                            if (data != null)
+                            {
+                                Console.WriteLine("Loading documents... ");
+                                var documents = DataImporter.parseDocuments(data);
+                                Console.WriteLine("Loaded {0} documents!", documents.Count);
+                                Console.Write("Constructing the term-document indexing datastructures... ");
+                                engine.update(new DocumentCollection(documents));
+                                Console.WriteLine("Done!");
+                            }
+                            break;
                         }
-                        break;
+
+                    case "load queries":
+                        {
+                            var data = readFile(matchedArgument);
+                            if (data != null)
+                            {
+                                Console.WriteLine("Loading queries");
+                                var queries = DataImporter.parseDocuments(data);
+                                queryCollection = new DocumentCollection(queries);
+                                Console.WriteLine("Loaded {0} queries!", queries.Count);
+                            }
+                            break;
+                        }
 
                     case "run text query":
-                        var query = engine.createQuery(new Document(matchedArgument, 0));
-                        var results = engine.executeQuery(query, scheme);
-                        Console.WriteLine("Found {0} results:", results.Count);
-                        foreach (var result in results)
                         {
-                            Console.WriteLine("  document id: {0}, similarity score: {1}", result.documentId, result.similarity);
+                            var query = engine.createQuery(new Document(matchedArgument, 0));
+                            executeQuery(engine, scheme, query);
+                            break;
                         }
-                        break;
+
+                    case "run query":
+                        {
+                            int queryId = int.Parse(matchedArgument);
+                            var doc = queryCollection.documentById(queryId);
+                            Console.WriteLine("Query with id {0}, text: '{1}'", doc.id, doc.value);
+                            var query = engine.createQuery(doc);
+                            executeQuery(engine, scheme, query);
+                            break;
+                        }
 
                     default:
                         Console.WriteLine("Error: Unknown command '{0}'!", input);
