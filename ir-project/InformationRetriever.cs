@@ -10,6 +10,7 @@ namespace ir_project
     {
         public TermDocumentMatrix terms = new TermDocumentMatrix();
         public DocumentCollection documents = null;
+        public StopWordRemover stopWords = new StopWordRemover();
         public Stemmer stemmer = new Stemmer();
 
         public struct SearchResultItem
@@ -39,6 +40,7 @@ namespace ir_project
                 foreach (var rawWord in doc.getTerms())
                 {
                     var word = stemmer.stem(rawWord);
+                    if (stopWords.isStopWord(word)) { continue; }
                     int frequency;
                     if (documentTerms.TryGetValue(word, out frequency))
                     {
@@ -67,6 +69,7 @@ namespace ir_project
             foreach (var rawWord in query.getTerms())
             {
                 String word = stemmer.stem(rawWord);
+                if (stopWords.isStopWord(word)) { continue; }
                 int frequency;
                 var term = terms.getTerm(word);
                 if (queryTerms.TryGetValue(term, out frequency))

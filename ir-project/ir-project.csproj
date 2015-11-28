@@ -55,6 +55,7 @@
     <Compile Include="Stemmer.cs" />
     <Compile Include="Term.cs" />
     <Compile Include="TermDocumentMatrix.cs" />
+    <Compile Include="StopWordRemover.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

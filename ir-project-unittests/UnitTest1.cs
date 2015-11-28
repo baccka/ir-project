@@ -18,6 +18,14 @@ namespace ir_project_unittests
             return terms;
         }
 
+        [TestMethod]
+        public void TestStopWords()
+        {
+            var stopWords = new StopWordRemover();
+            Assert.IsTrue(stopWords.isStopWord("a"));
+            Assert.isTrue(stopWords.isStopWord("the"));
+        }
+
         // This method ensures that the document can enumerate over all
         // the terms correctly.
         [TestMethod]
