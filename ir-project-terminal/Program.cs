@@ -91,13 +91,15 @@ namespace ir_project_terminal
 
             var loadDocuments = new Command("load documents");
             var loadQueries = new Command("load queries");
+            var loadRelevance = new Command("load relevance");
             var runNewQuery = new Command("run text query");
             var runQuery = new Command("run query");
             var showTerm = new Command("show term");
             var showQuery = new Command("show query");
-            Command[] commands = { loadDocuments, loadQueries, runNewQuery, runQuery, showTerm, showQuery };
+            Command[] commands = { loadDocuments, loadQueries, loadRelevance, runNewQuery, runQuery, showTerm, showQuery };
 
             var queryCollection = new DocumentCollection();
+            List<RelevanceJudgement> relevance = null;
             var engine = new InformationRetriever();
             // Weighting schemes.
             var scheme = new BM25Scheme(/*k1=*/2.0f, /*b=*/0.75f);
@@ -146,6 +148,18 @@ namespace ir_project_terminal
                             break;
                         }
 
+                    case "load relevance":
+                        {
+                            var data = readFile(matchedArgument);
+                            if (data != null)
+                            {
+                                Console.Write("Loading relevance judgements... ");
+                                relevance = DataImporter.parseRelevance(data);
+                                Console.WriteLine("Loaded {0} relevance judgements!", relevance.Count);
+                            }
+                            break;
+                        }
+
                     case "run text query":
                         {
                             var query = engine.createQuery(new Document(matchedArgument, 0));
@@ -181,6 +195,7 @@ namespace ir_project_terminal
                             }
                             break;
                         }
+
                 case "show query":
                     {
                         var doc = getQueryById(matchedArgument, queryCollection);
@@ -196,7 +211,6 @@ namespace ir_project_terminal
                         }
                         break;
                     }
-
 
                     default:
                         Console.WriteLine("Error: Unknown command '{0}'!", input);
