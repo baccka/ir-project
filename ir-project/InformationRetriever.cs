@@ -32,7 +32,6 @@ namespace ir_project
         public void update(DocumentCollection documents)
         {
             this.documents = documents;
-            var documentId = 0;
             foreach (var doc in documents.getDocuments())
             {
                 // Create a local (document specific) term collection.
@@ -54,9 +53,8 @@ namespace ir_project
                 // Merge the local term collection with the global term document matrix.
                 foreach (var termOccurence in documentTerms) {
                     var term = terms.getTerm(termOccurence.Key);
-                    term.addOccurenceForDocument(termOccurence.Value, documentId);
+                    term.addOccurenceForDocument(termOccurence.Value, doc.id);
                 }
-                documentId++;
             }
         }
 
@@ -102,7 +100,7 @@ namespace ir_project
                 float idf = scheme.computeIDF((float)documents.getDocuments().Count, (float)term.term.getOccurences().Count);
                 foreach (var occurence in term.term.getOccurences())
                 {
-                    float dl = (float)documents[occurence.documentId].length;
+                    float dl = (float)documents.documentById(occurence.documentId).length;
                     float termSimilarity = scheme.computeTermSimilarity((float)occurence.frequency, idf, (float)term.frequency, dl, documents.averageDocumentLength);
                     float similarity;
                     if (results.TryGetValue(occurence.documentId, out similarity))
