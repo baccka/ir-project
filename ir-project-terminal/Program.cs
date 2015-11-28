@@ -78,7 +78,8 @@ namespace ir_project_terminal
             var loadQueries = new Command("load queries");
             var runNewQuery = new Command("run text query");
             var runQuery = new Command("run query");
-            Command[] commands = { loadDocuments, loadQueries, runNewQuery, runQuery };
+            var showTerm = new Command("show term");
+            Command[] commands = { loadDocuments, loadQueries, runNewQuery, runQuery, showTerm };
 
             var queryCollection = new DocumentCollection();
             var engine = new InformationRetriever();
@@ -143,6 +144,22 @@ namespace ir_project_terminal
                             Console.WriteLine("Query with id {0}, text: '{1}'", doc.id, doc.value);
                             var query = engine.createQuery(doc);
                             executeQuery(engine, scheme, query);
+                            break;
+                        }
+
+                    case "show term":
+                        {
+                            var term = engine.terms.findTerm(matchedArgument);
+                            if (term == null)
+                            {
+                                Console.WriteLine("Invalid term '{0}'", matchedArgument);
+                                break;
+                            }
+                            Console.WriteLine("Term '{0}', global frequency: {1}, occurences:", matchedArgument, term.getGlobalFrequency());
+                            foreach (var occurence in term.getOccurences())
+                            {
+                                Console.WriteLine("  document id: {0}, frequency: {1}", occurence.documentId, occurence.frequency);
+                            }
                             break;
                         }
 

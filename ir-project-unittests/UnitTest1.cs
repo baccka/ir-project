@@ -137,6 +137,9 @@ namespace ir_project_unittests
                 var ir = new InformationRetriever();
                 ir.update(documents);
                 var terms = ir.terms;
+
+                Assert.IsNull(terms.findTerm("a"));
+                Assert.IsNotNull(terms.findTerm("hello"));
                 
                 var hello = terms.getTerm("hello");
                 Assert.AreEqual(3, hello.getGlobalFrequency());

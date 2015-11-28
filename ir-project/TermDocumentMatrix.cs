@@ -11,7 +11,7 @@ namespace ir_project
         private Dictionary<String, Term> terms = new Dictionary<String, Term>();
 
         /// <summary>
-        /// Returns a term that corresponds to a given value.
+        /// Returns a term that corresponds to a given word.
         /// A new term is created if such term doesn't exist.
         /// </summary>
         public Term getTerm(String value)
@@ -24,6 +24,20 @@ namespace ir_project
             term = new Term(value);
             terms.Add(value, term);
             return term;
+        }
+
+        /// <summary>
+        /// Returns a term that corresponds to a given word.
+        /// Returns null if such term doesn't exist.
+        /// </summary>
+        public Term findTerm(String value)
+        {
+            Term term;
+            if (terms.TryGetValue(value, out term))
+            {
+                return term;
+            }
+            return null;
         }
     }
 }
