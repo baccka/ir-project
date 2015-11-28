@@ -211,11 +211,12 @@ namespace ir_project_terminal
                                     }
                                     resultCount++;
                                 }
-                                Console.WriteLine("Precision/Recall:");
+                                Console.WriteLine("Precision | Recall (graph is shown in the browser):");
                                 for(int i = 0; i < precision.Count; i++)
                                 {
-                                    Console.WriteLine("  {0} / {1}", precision[i], recall[i]);
+                                    Console.WriteLine("  {0} | {1}", precision[i], recall[i]);
                                 }
+                                PrecisionRecallGraph.show(doc.id, precision, recall);
                             }
                             break;
                         }
