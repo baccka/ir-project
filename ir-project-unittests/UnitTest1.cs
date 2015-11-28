@@ -117,6 +117,7 @@ namespace ir_project_unittests
 
             Assert.AreSame(d0, documents.documentById(11));
             Assert.AreSame(d1, documents.documentById(42));
+            Assert.IsNull(documents.documentById(0));
             var d2 = new Document("foo", 0);
             documents.add(d2);
             Assert.AreSame(d2, documents.documentById(0));

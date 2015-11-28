@@ -141,6 +141,11 @@ namespace ir_project_terminal
                         {
                             int queryId = int.Parse(matchedArgument);
                             var doc = queryCollection.documentById(queryId);
+                            if (doc == null) 
+                            {
+                                Console.WriteLine("Error: Query with ID {0} doesn't exist!", queryId);
+                                break;
+                            }
                             Console.WriteLine("Query with id {0}, text: '{1}'", doc.id, doc.value);
                             var query = engine.createQuery(doc);
                             executeQuery(engine, scheme, query);
@@ -152,7 +157,7 @@ namespace ir_project_terminal
                             var term = engine.terms.findTerm(matchedArgument);
                             if (term == null)
                             {
-                                Console.WriteLine("Invalid term '{0}'", matchedArgument);
+                                Console.WriteLine("Error: Invalid term '{0}'", matchedArgument);
                                 break;
                             }
                             Console.WriteLine("Term '{0}', global frequency: {1}, occurences:", matchedArgument, term.getGlobalFrequency());

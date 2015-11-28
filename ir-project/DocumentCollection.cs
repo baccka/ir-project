@@ -51,6 +51,10 @@ namespace ir_project
             documents.Add(doc);
         }
 
+        /// <summary>
+        /// Return a document that has the given document ID.
+        /// Returns null if such document doesn't exist.
+        /// </summary>
         public Document documentById(int id)
         {
             if (!isIdDocumentMappingDone)
@@ -61,7 +65,11 @@ namespace ir_project
                 }
                 isIdDocumentMappingDone = true;
             }
-            return idDocumentMapping[id];
+            Document doc;
+            if (idDocumentMapping.TryGetValue(id, out doc)) {
+                return doc;
+            }
+            return null;
         }
 
         /// <summary>
