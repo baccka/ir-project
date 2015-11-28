@@ -68,6 +68,21 @@ namespace ir_project_terminal
             }
         }
 
+        /// <summary>
+        /// Return a document for a query with the given id.
+        /// </summary>
+        static Document getQueryById(String sid, DocumentCollection queryCollection)
+        {
+            int queryId = int.Parse(sid);
+            var doc = queryCollection.documentById(queryId);
+            if (doc == null) 
+            {
+                Console.WriteLine("Error: Query with ID {0} doesn't exist!", queryId);
+                return null;
+            }
+            return doc;
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to ir-project command line terminal interface.");
@@ -79,7 +94,8 @@ namespace ir_project_terminal
             var runNewQuery = new Command("run text query");
             var runQuery = new Command("run query");
             var showTerm = new Command("show term");
-            Command[] commands = { loadDocuments, loadQueries, runNewQuery, runQuery, showTerm };
+            var showQuery = new Command("show query");
+            Command[] commands = { loadDocuments, loadQueries, runNewQuery, runQuery, showTerm, showQuery };
 
             var queryCollection = new DocumentCollection();
             var engine = new InformationRetriever();
@@ -139,11 +155,9 @@ namespace ir_project_terminal
 
                     case "run query":
                         {
-                            int queryId = int.Parse(matchedArgument);
-                            var doc = queryCollection.documentById(queryId);
+                            var doc = getQueryById(matchedArgument, queryCollection);
                             if (doc == null) 
                             {
-                                Console.WriteLine("Error: Query with ID {0} doesn't exist!", queryId);
                                 break;
                             }
                             Console.WriteLine("Query with id {0}, text: '{1}'", doc.id, doc.value);
@@ -167,6 +181,22 @@ namespace ir_project_terminal
                             }
                             break;
                         }
+                case "show query":
+                    {
+                        var doc = getQueryById(matchedArgument, queryCollection);
+                        if (doc == null) 
+                        {
+                            break;
+                        }
+                        Console.WriteLine("Query with id {0}, text: '{1}', terms:", doc.id, doc.value);
+                        var query = engine.createQuery(doc);
+                        foreach (var term in query.terms)
+                        {
+                            Console.WriteLine("  term '{0}', frequency: {1}", term.term.value, term.frequency);
+                        }
+                        break;
+                    }
+
 
                     default:
                         Console.WriteLine("Error: Unknown command '{0}'!", input);

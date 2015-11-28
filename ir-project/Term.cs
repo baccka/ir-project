@@ -23,7 +23,7 @@ namespace ir_project
             }
         }
 
-        private String value;
+        public String value { get; private set; }
         private int globalFrequency = 0;
         private List<DocumentOccurence> occurences = new List<DocumentOccurence>();
 
