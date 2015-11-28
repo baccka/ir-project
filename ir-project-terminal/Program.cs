@@ -95,9 +95,11 @@ namespace ir_project_terminal
             var runNewQuery = new Command("run text query");
             var runQuery = new Command("run query");
             var showTerm = new Command("show term");
+            var showDocument = new Command("show document");
             var showQuery = new Command("show query");
-            Command[] commands = { loadDocuments, loadQueries, loadRelevance, runNewQuery, runQuery, showTerm, showQuery };
+            Command[] commands = { loadDocuments, loadQueries, loadRelevance, runNewQuery, runQuery, showTerm, showDocument, showQuery };
 
+            var documentCollection = new DocumentCollection();
             var queryCollection = new DocumentCollection();
             List<RelevanceJudgement> relevance = null;
             var engine = new InformationRetriever();
@@ -129,7 +131,8 @@ namespace ir_project_terminal
                                 var documents = DataImporter.parseDocuments(data);
                                 Console.WriteLine("Loaded {0} documents!", documents.Count);
                                 Console.Write("Constructing the term-document indexing datastructures... ");
-                                engine.update(new DocumentCollection(documents));
+                                documentCollection = new DocumentCollection(documents);
+                                engine.update(documentCollection);
                                 Console.WriteLine("Done!");
                             }
                             break;
@@ -192,6 +195,28 @@ namespace ir_project_terminal
                             foreach (var occurence in term.getOccurences())
                             {
                                 Console.WriteLine("  document id: {0}, frequency: {1}", occurence.documentId, occurence.frequency);
+                            }
+                            break;
+                        }
+
+                    case "show document":
+                        {
+                            int docId = int.Parse(matchedArgument);
+                            var doc = documentCollection.documentById(docId);
+                            if (doc == null) 
+                            {
+                                Console.WriteLine("Error: Document with ID {0} doesn't exist!", docId);
+                                break;
+                            }
+                            Console.WriteLine("Document with id '{0}', terms:", doc.id);
+                            foreach (var term in engine.terms.termList) 
+                            {
+                                var occurences = term.getOccurences().Where(x => x.documentId == doc.id);
+                                // Usually this just one occurence.
+                                foreach (var occurence in occurences)
+                                {
+                                    Console.WriteLine("  term '{0}', frequency: {1}", term.value, occurence.frequency);
+                                }
                             }
                             break;
                         }

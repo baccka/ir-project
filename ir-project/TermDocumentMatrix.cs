@@ -10,6 +10,8 @@ namespace ir_project
     {
         private Dictionary<String, Term> terms = new Dictionary<String, Term>();
 
+        public IEnumerable<Term> termList { get { return terms.Values; } }
+
         /// <summary>
         /// Returns a term that corresponds to a given word.
         /// A new term is created if such term doesn't exist.
