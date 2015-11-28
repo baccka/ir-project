@@ -221,25 +221,25 @@ namespace ir_project_terminal
                             break;
                         }
 
-                case "show query":
-                    {
-                        var doc = getQueryById(matchedArgument, queryCollection);
-                        if (doc == null) 
+                    case "show query":
                         {
+                            var doc = getQueryById(matchedArgument, queryCollection);
+                            if (doc == null) 
+                            {
+                                break;
+                            }
+                            Console.WriteLine("Query with id {0}, text: '{1}', terms:", doc.id, doc.value);
+                            var query = engine.createQuery(doc);
+                            foreach (var term in query.terms)
+                            {
+                                Console.WriteLine("  term '{0}', frequency: {1}", term.term.value, term.frequency);
+                            }
                             break;
                         }
-                        Console.WriteLine("Query with id {0}, text: '{1}', terms:", doc.id, doc.value);
-                        var query = engine.createQuery(doc);
-                        foreach (var term in query.terms)
-                        {
-                            Console.WriteLine("  term '{0}', frequency: {1}", term.term.value, term.frequency);
-                        }
-                        break;
-                    }
 
-                    default:
-                        Console.WriteLine("Error: Unknown command '{0}'!", input);
-                        break;
+                        default:
+                            Console.WriteLine("Error: Unknown command '{0}'!", input);
+                            break;
                 }
             } while (input != "exit" && input != "quit");
             Console.WriteLine("---");
