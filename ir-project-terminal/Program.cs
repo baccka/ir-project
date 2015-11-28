@@ -179,7 +179,44 @@ namespace ir_project_terminal
                             }
                             Console.WriteLine("Query with id {0}, text: '{1}'", doc.id, doc.value);
                             var query = engine.createQuery(doc);
-                            executeQuery(engine, scheme, query);
+                            var results = engine.executeQuery(query, scheme);
+                            Console.WriteLine("Found {0} results:", results.Count);
+                            foreach (var result in results)
+                            {
+                                Console.WriteLine("  document id: {0}, similarity score: {1}", result.documentId, result.similarity);
+                            }
+                            // Compute precision/recall if possible.
+                            if (relevance != null) {
+                                var relevantDocuments = relevance.Where(x => x.queryId == doc.id).Select(x => x.documentId).ToArray();
+                                var relevantSet = new HashSet<int>(relevantDocuments);
+
+                                List<double> precision = new List<double>();
+                                List<double> recall = new List<double>();
+
+                                //add initial precision and recall values
+                                precision.Add(100);
+                                recall.Add(0);
+                                double noOfRelevantDocs = relevantDocuments.Count();
+
+                                double relevantDocCount = 1;
+                                double resultCount = 1;
+                               
+                                foreach (var result in results)
+                                {
+                                    if (relevantSet.Contains(result.documentId))
+                                    {
+                                        recall.Add((relevantDocCount / noOfRelevantDocs)*100);
+                                        precision.Add((relevantDocCount / resultCount)*100);
+                                        relevantDocCount++;
+                                    }
+                                    resultCount++;
+                                }
+                                Console.WriteLine("Precision/Recall:");
+                                for(int i = 0; i < precision.Count; i++)
+                                {
+                                    Console.WriteLine("  {0} / {1}", precision[i], recall[i]);
+                                }
+                            }
                             break;
                         }
 
