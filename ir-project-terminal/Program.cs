@@ -71,8 +71,6 @@ namespace ir_project_terminal
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to ir-project command line terminal interface.");
-
-            Console.WriteLine("About to call Console.ReadLine in a loop.");
             Console.WriteLine("----");
             String input;
 
