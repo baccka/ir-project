@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -90,13 +90,14 @@ namespace ir_project_terminal
             {
                 Console.Write("> ");
                 input = Console.ReadLine();
+                if (input == null) { input = ""; }
                 String matchedCommand = null;
                 String matchedArgument = null;
                 foreach (var command in commands) {
                     var match = command.matches(input);
                     if (match.Item1) {
                         matchedCommand = command.command;
-                        matchedArgument = match.Item2;
+                        matchedArgument = match.Item2.Trim();
                         break;
                     }
                 }
