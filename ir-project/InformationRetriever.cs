@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ir_project
 {
+    /// <summary>
+    /// The IR engine.
+    /// </summary>
     public class InformationRetriever
     {
         public TermDocumentMatrix terms = new TermDocumentMatrix();
