@@ -9,7 +9,7 @@ namespace ir_project
     /// <summary>
     /// Implements the BM25 weighting scheme.
     /// </summary>
-    public class BM25Scheme
+    public class BM25Scheme : WeightingScheme
     {
         // Algorithmic constants.
         public float k1 { get; private set; }

@@ -94,7 +94,7 @@ namespace ir_project
         /// <summary>
         /// Perform a search using the given query.
         /// </summary>
-        public List<SearchResultItem> executeQuery(Query query, BM25Scheme scheme)
+        public List<SearchResultItem> executeQuery(Query query, WeightingScheme scheme)
         {
             // Find the documents that contain terms that exists in the query.
             var results = new Dictionary<int,float>();

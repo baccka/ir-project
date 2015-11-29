@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace ir_project
 {  
-	interface WeightingScheme
+	public interface WeightingScheme
 	{ 
-		float computeTermSimilarity();
-		float computeIDF();
+        float computeTermSimilarity(float tf, float idf, float qtf, float dl, float dlAvg);
+        float computeIDF(float numDocs, float docFreq);
 	}
 }
