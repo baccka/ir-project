@@ -58,7 +58,7 @@ namespace ir_project_terminal
             }
         }
 
-        static void executeQuery(InformationRetriever engine, BM25Scheme scheme, Query query)
+        static void executeQuery(InformationRetriever engine, WeightingScheme scheme, Query query)
         {
             var results = engine.executeQuery(query, scheme);
             Console.WriteLine("Found {0} results:", results.Count);
@@ -97,14 +97,17 @@ namespace ir_project_terminal
             var showTerm = new Command("show term");
             var showDocument = new Command("show document");
             var showQuery = new Command("show query");
-            Command[] commands = { loadDocuments, loadQueries, loadRelevance, runNewQuery, runQuery, showTerm, showDocument, showQuery };
+            var setScheme = new Command("set scheme");
+            Command[] commands = { loadDocuments, loadQueries, loadRelevance, runNewQuery, runQuery, showTerm, showDocument, showQuery, setScheme };
 
             var documentCollection = new DocumentCollection();
             var queryCollection = new DocumentCollection();
             List<RelevanceJudgement> relevance = null;
             var engine = new InformationRetriever();
             // Weighting schemes.
-            var scheme = new BM25Scheme(/*k1=*/2.0f, /*b=*/0.75f);
+            var bm25Scheme = new BM25Scheme(/*k1=*/2.0f, /*b=*/0.75f);
+            var pivotedScheme = new PivotedNormalisationScheme(/*s=*/1.0f);
+            WeightingScheme scheme = bm25Scheme;
             do 
             {
                 Console.Write("> ");
@@ -284,6 +287,25 @@ namespace ir_project_terminal
                             foreach (var term in query.terms)
                             {
                                 Console.WriteLine("  term '{0}', frequency: {1}", term.term.value, term.frequency);
+                            }
+                            break;
+                        }
+
+                    case "set scheme":
+                        {
+                            if (matchedArgument == "bm25")
+                            {
+                                scheme = bm25Scheme;
+                                Console.WriteLine("Using BM25.");
+                            }
+                            else if (matchedArgument == "pivoted")
+                            {
+                                scheme = pivotedScheme;
+                                Console.WriteLine("Using Pivoted Normalisation.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("  unknown weighting scheme '{0}'", matchedArgument);
                             }
                             break;
                         }
