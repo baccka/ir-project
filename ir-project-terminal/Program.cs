@@ -107,7 +107,7 @@ namespace ir_project_terminal
             var engine = new InformationRetriever();
             // Weighting schemes.
             var bm25Scheme = new BM25Scheme(/*k1=*/2.0f, /*b=*/0.75f);
-            var pivotedScheme = new PivotedNormalisationScheme(/*s=*/1.0f);
+            var pivotedScheme = new PivotedNormalisationScheme(/*s=*/0.5f);
             WeightingScheme scheme = bm25Scheme;
             do 
             {
