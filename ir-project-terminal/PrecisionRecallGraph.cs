@@ -85,6 +85,7 @@ $(function () {
             data += " ]";
             var s = source.Replace("{{ID}}", queryId.ToString()).Replace("{{DATA}}", data);
             System.IO.File.WriteAllText("precisionRecall.html", s);
+            // Open the graph in the browser.
             System.Diagnostics.Process.Start("precisionRecall.html");
         }
     }

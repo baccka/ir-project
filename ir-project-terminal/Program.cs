@@ -110,6 +110,19 @@ namespace ir_project_terminal
                 Console.Write("> ");
                 input = Console.ReadLine();
                 if (input == null) { input = ""; }
+                if (input == "exit" || input == "quit") { break; }
+                if (input == "help") {
+                    Console.WriteLine("Terminal UI for the ir-project IR system.");
+                    Console.WriteLine("Available commands:");
+                    Console.WriteLine("  exit");
+                    Console.WriteLine("  quit");
+                    Console.WriteLine("  help");
+                    foreach (var command in commands)
+                    {
+                        Console.WriteLine("  {0}: <argument>", command.command);
+                    }
+                    continue;
+                }
                 String matchedCommand = null;
                 String matchedArgument = null;
                 foreach (var command in commands) {
