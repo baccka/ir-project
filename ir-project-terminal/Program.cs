@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Diagnostics;
 using ir_project;
 
 namespace ir_project_terminal
@@ -147,9 +148,12 @@ namespace ir_project_terminal
                                 var documents = DataImporter.parseDocuments(data);
                                 Console.WriteLine("Loaded {0} documents!", documents.Count);
                                 Console.Write("Constructing the term-document indexing datastructures... ");
+                                Stopwatch sw = new Stopwatch();                          
+                                sw.Start();
                                 documentCollection = new DocumentCollection(documents);
                                 engine.update(documentCollection);
-                                Console.WriteLine("Done!");
+                                sw.Stop();
+                                Console.WriteLine("Done ({0} ms)!", sw.ElapsedMilliseconds);
                             }
                             break;
                         }
@@ -194,9 +198,12 @@ namespace ir_project_terminal
                                 break;
                             }
                             Console.WriteLine("Query with id {0}, text: '{1}'", doc.id, doc.value);
+                            Stopwatch sw = new Stopwatch();                          
+                            sw.Start();
                             var query = engine.createQuery(doc);
                             var results = engine.executeQuery(query, scheme);
-                            Console.WriteLine("Found {0} results:", results.Count);
+                            sw.Stop();
+                            Console.WriteLine("Found {0} results in {1} ms:", results.Count, sw.ElapsedMilliseconds);
                             foreach (var result in results)
                             {
                                 Console.WriteLine("  document id: {0}, similarity score: {1}", result.documentId, result.similarity);
