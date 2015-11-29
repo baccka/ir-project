@@ -57,6 +57,7 @@
     <Compile Include="TermDocumentMatrix.cs" />
     <Compile Include="StopWordRemover.cs" />
     <Compile Include="PivotedNormalisationScheme.cs" />
+    <Compile Include="WeightingScheme.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
