@@ -28,7 +28,7 @@ namespace ir_project
 
         public float computeTermSimilarity(float tf, float idf, float qtf, float dl, float dlAvg)
         {
-            return (idf * tf * qtf) / (tf + k1 * (1.0f - b + b * (dl/dlAvg)));
+            return (idf * tf * qtf) / (tf + k1 * ((1.0f - b) + b * (dl/dlAvg)));
         }
     }
 }
