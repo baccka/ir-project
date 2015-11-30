@@ -10,9 +10,15 @@ using ir_project;
 
 namespace ir_project_terminal
 {
+    /// <summary>
+    /// Terminal based UI for the IR system.
+    /// </summary>
     class Program
     {
 
+        /// <summary>
+        /// Return the contents of the file.
+        /// </summary>
         static String readFile(String path)
         {
             String data;
@@ -36,11 +42,13 @@ namespace ir_project_terminal
         class Command
         {
             public String command { get; private set; }
+            public String argumentName { get; private set; }
             private Regex regex;
 
-            public Command(String cmd)
+            public Command(String cmd, String name)
             {
                 command = cmd;
+                argumentName = name;
                 regex = new Regex(@"^\s*" + cmd + @":(.+)$");
             }
 
@@ -56,16 +64,6 @@ namespace ir_project_terminal
                 if (!match.Success)
                     return new Tuple<bool, String>(false, null);
                 return new Tuple<bool, String>(true, match.Groups[1].Value);
-            }
-        }
-
-        static void executeQuery(InformationRetriever engine, WeightingScheme scheme, Query query)
-        {
-            var results = engine.executeQuery(query, scheme);
-            Console.WriteLine("Found {0} results:", results.Count);
-            foreach (var result in results)
-            {
-                Console.WriteLine("  document id: {0}, similarity score: {1}", result.documentId, result.similarity);
             }
         }
 
@@ -90,15 +88,15 @@ namespace ir_project_terminal
             Console.WriteLine("----");
             String input;
 
-            var loadDocuments = new Command("load documents");
-            var loadQueries = new Command("load queries");
-            var loadRelevance = new Command("load relevance");
-            var runNewQuery = new Command("run text query");
-            var runQuery = new Command("run query");
-            var showTerm = new Command("show term");
-            var showDocument = new Command("show document");
-            var showQuery = new Command("show query");
-            var setScheme = new Command("set scheme");
+            var loadDocuments = new Command("load documents", "filepath");
+            var loadQueries = new Command("load queries", "filepath");
+            var loadRelevance = new Command("load relevance", "filepath");
+            var runNewQuery = new Command("run text query", "text");
+            var runQuery = new Command("run query", "query id");
+            var showTerm = new Command("show term", "term");
+            var showDocument = new Command("show document", "document id");
+            var showQuery = new Command("show query", "query id");
+            var setScheme = new Command("set scheme", "bm25|pivoted");
             Command[] commands = { loadDocuments, loadQueries, loadRelevance, runNewQuery, runQuery, showTerm, showDocument, showQuery, setScheme };
 
             var documentCollection = new DocumentCollection();
@@ -123,11 +121,11 @@ namespace ir_project_terminal
                     Console.WriteLine("  help");
                     foreach (var command in commands)
                     {
-                        Console.WriteLine("  {0}: <argument>", command.command);
+                        Console.WriteLine("  {0}: <{1}>", command.command, command.argumentName);
                     }
                     continue;
                 }
-                String matchedCommand = null;
+                String matchedCommand = "";
                 String matchedArgument = null;
                 foreach (var command in commands) {
                     var match = command.matches(input);
@@ -186,7 +184,12 @@ namespace ir_project_terminal
                     case "run text query":
                         {
                             var query = engine.createQuery(new Document(matchedArgument, 0));
-                            executeQuery(engine, scheme, query);
+                            var results = engine.executeQuery(query, scheme);
+                            Console.WriteLine("Found {0} results:", results.Count);
+                            foreach (var result in results)
+                            {
+                                Console.WriteLine("  document id: {0}, similarity score: {1}", result.documentId, result.similarity);
+                            }
                             break;
                         }
 
@@ -317,13 +320,12 @@ namespace ir_project_terminal
                             break;
                         }
 
-                        default:
-                            Console.WriteLine("Error: Unknown command '{0}'!", input);
-                            break;
+                     default:
+                        Console.WriteLine("Error: Unknown command '{0}'!", input);
+                        break;
                 }
             } while (input != "exit" && input != "quit");
             Console.WriteLine("---");
-            
         }
     }
 }
